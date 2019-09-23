@@ -50,12 +50,12 @@ public class MainMenuManager : MonoBehaviour
     public void onClickCreate(){
         //TODO: Temp code just loading the ar scene
         // Should create the room
-        SceneManager.LoadScene("HelloAR");
+        SceneManager.LoadScene("BoxScene");
     }
 
     public void onClickJoin(){
         //TODO: Temp code just loading the ar scene
         // should search for room can be joined
-        SceneManager.LoadScene("HelloAR");
+        SceneManager.LoadScene("BoxScene");
     }
 }
