@@ -82,6 +82,20 @@ public class MainMenuManager : MonoBehaviour
         main_panel.SetActive(true);
     }
 
+    public void onClickBack_Room(){
+        resetPlayers();
+        room_panel.SetActive(false);
+        create_join_panel.SetActive(true);
+    }
+
+    private void resetPlayers(){
+        for (int i = 1;i<=4;i++){
+            setPlayerName("player" + i.ToString(),"waiting...");
+             Image readyImg = GameObject.Find("player" + i.ToString()).GetComponentsInChildren<Image>()[1];
+            readyImg.enabled = false;
+        }
+    }
+
     public void onClickBack_About(){
         about_panel.SetActive(false);
         main_panel.SetActive(true);
@@ -93,6 +107,7 @@ public class MainMenuManager : MonoBehaviour
 
     public void onClickCreate(){
         host = true;
+        player_num = "player1";
         create_join_panel.SetActive(false);
         room_panel.SetActive(true);
         setPlayerName(player_num,nickname);
@@ -103,8 +118,8 @@ public class MainMenuManager : MonoBehaviour
     }
 
     public void setPlayerReady(string player){
-        print(GameObject.Find(player).GetComponentInChildren<Image>());
-        GameObject.Find(player).GetComponentsInChildren<Image>()[1].enabled = true;
+        Image readyImg = GameObject.Find(player).GetComponentsInChildren<Image>()[1];
+        readyImg.enabled = !readyImg.enabled;
     }
 
     public void onClickJoin(){
@@ -122,6 +137,8 @@ public class MainMenuManager : MonoBehaviour
         // when connection is ready
         player_num = "player2";
         setPlayerName(player_num,nickname);
+        // TODO: remove harding coding owner name
+        setPlayerName("player1","Owner");
     }
 
 
