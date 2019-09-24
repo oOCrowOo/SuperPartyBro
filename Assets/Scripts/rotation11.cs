@@ -5,43 +5,30 @@ using UnityEngine.UI;
 
 public class rotation11 : MonoBehaviour
 {
-    /// <summary>
-    /// 幸运转盘指针父对象的Transform
-    /// </summary>
+    /// 转盘指针父对象的Transform
     private Transform roolPointer;
 
-    /// <summary>
     /// 初始旋转速度
-    /// </summary>
     private float initSpeed;
 
-    /// <summary>
     /// 速度变化值
-    /// </summary>
     private float changeSpeed = 0.5f;
 
-    /// <summary>
     /// 转盘是否暂停
-    /// </summary>
     private bool isPause = true;
 
-    /// <summary>
     /// button事件，控制指针
-    /// </summary>
     private Button button;
 
     void Awake()
     {
         //获取幸运转盘指针父对象的Transform
         roolPointer = GetComponent<Transform>();
-
         //获取button按钮
-        button = transform.parent.Find("Button").GetComponent<Button>();
+        button = transform.parent.Find("StartButton").GetComponent<Button>();
     }
 
-    /// <summary>
     /// 开始抽奖，注册OnClick事件
-    /// </summary>
     void OnEnable()
     {
         //清空button注册事件
@@ -50,9 +37,7 @@ public class rotation11 : MonoBehaviour
         button.onClick.AddListener(OnButtonClick);
     }
 
-    /// <summary>
     /// 点击事件
-    /// </summary>
     public void OnButtonClick()
     {
         if (isPause)
