@@ -10,7 +10,7 @@ public class rotation02 : MonoBehaviour
     private float changeSpeed = 0.8f;
     private bool isPause = true;
     private Button button;
-    //6个Item
+    //8个Item
     private List<RewardItem> allItems;
 
     //封装 Item
@@ -38,13 +38,15 @@ public class rotation02 : MonoBehaviour
 
         allItems = new List<RewardItem>()
         {
-           //6个item，平分概率和夹角，图文尚未一一对应
-            new RewardItem("reward1",17,0,30),
-            new RewardItem("reward2",17,30,90),
-            new RewardItem("reward3",17,90,165),
-            new RewardItem("reward4",17,165,255),
-            new RewardItem("reward5",17,255,360),
-            new RewardItem("reward6",17,255,360),
+           //8个item，平分概率和夹角，图文尚未对应
+            new RewardItem("reward1",13,0,45),
+            new RewardItem("reward2",13,45,90),
+            new RewardItem("reward3",13,90,135),
+            new RewardItem("reward4",13,135,180),
+            new RewardItem("reward5",13,180,225),
+            new RewardItem("reward6",13,225,270),
+            new RewardItem("reward7",13,270,315),
+            new RewardItem("reward8",13,315,360),
         };
 
         foreach (RewardItem item in allItems)
@@ -55,12 +57,27 @@ public class rotation02 : MonoBehaviour
             if (random <= item.ItemRank)
             {
                 result = item.ItemName;
+                float angle = Random.Range(item.MinAngle, item.MaxAngle);
+                //旋转转盘指针
+
+                ////....
+                //roolPointer.Rotate(new Vector3(0, 0, -1) * initSpeed * Time.deltaTime);
+                //initSpeed -= changeSpeed;
+                //if (initSpeed <= 0)
+                //{
+                //    isPause = true;
+                //}
+                ////....
+
                 break;
             }
             else
             {
                 totalRank -= item.ItemRank;
             }
+
+
+    
         }
 
         return "抽奖结果为:" + result;
@@ -94,7 +111,7 @@ public class rotation02 : MonoBehaviour
     {
         if (!isPause)
         {
-            //转动转盘(-1为顺时针,1为逆时针)
+            //转动转盘(-1为顺时针, 1为逆时针)
             roolPointer.Rotate(new Vector3(0, 0, -1) * initSpeed * Time.deltaTime);
             initSpeed -= changeSpeed;
             if (initSpeed <= 0)
@@ -102,8 +119,14 @@ public class rotation02 : MonoBehaviour
                 isPause = true;
                 Debug.Log(Reward());
             }
+
+   
+
+
         }
-    }
+
+
+}
 
     
 
