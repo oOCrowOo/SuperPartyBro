@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using Photon.Pun;
+using Photon.Realtime;
 
-public class MainMenuManager : MonoBehaviour
+public class MainMenuManager : MonoBehaviourPunCallbacks
 {
 
 
@@ -33,19 +35,27 @@ public class MainMenuManager : MonoBehaviour
     {   
         // TODO: debug usage, remove later
         PlayerPrefs.DeleteAll();
-
+        name_panel.SetActive(true);
+        main_panel.SetActive(false);
         // Find user's preset name
-        if(!PlayerPrefs.HasKey("nickname")){
-            name_panel.SetActive(true);
-            main_panel.SetActive(false);
+        //*******
+        //这个方法有点问题，如果player想换个名字咋办，既然是网游就让他每次都登录吧
+        //****
+        /* if (!PlayerPrefs.HasKey("nickname")){
+             name_panel.SetActive(true);
+             main_panel.SetActive(false);
 
-        }
-        else{
-            name_panel.SetActive(false);
-            main_panel.SetActive(true);
-            nickname = PlayerPrefs.GetString("nickname");
+         }
+         else{
+             name_panel.SetActive(false);
+             main_panel.SetActive(true);
+             nickname = PlayerPrefs.GetString("nickname");
 
-        }
+         } */
+
+
+
+
     }
 
     // Update is called once per frame
@@ -106,11 +116,27 @@ public class MainMenuManager : MonoBehaviour
     }
 
     public void onClickCreate(){
-        host = true;
-        player_num = "player1";
+        //host = true;
+        // player_num = "player1";
+        string password = PIN.text;
+     
+       
+        RoomOptions roomoptions = new RoomOptions();
+        roomoptions.MaxPlayers = 4;
+        string[] roompropsInLobby = { "gm" }; // game mode
+        //party game mode
+        //1. 丢纸团 = tp
+        //2. 转盘= roll
+        //3。 摇可乐 = shake
+        ExitGames.Client.Photon.Hashtable customesproperties = new ExitGames.Client.Photon.Hashtable();
+
+        roomoptions.CustomRoomPropertiesForLobby = roompropsInLobby;
+        roomoptions.CustomRoomProperties = customesproperties;
+        PhotonNetwork.CreateRoom(password, roomoptions);
         create_join_panel.SetActive(false);
         room_panel.SetActive(true);
-        setPlayerName(player_num,nickname);
+        setPlayerName(player_num, PhotonNetwork.LocalPlayer.NickName);
+
     }
 
     public void setPlayerName(string player, string name){
@@ -143,12 +169,65 @@ public class MainMenuManager : MonoBehaviour
 
 
     public void onClickName(){
-        if (nameInput.text !=""){
+        if (!string.IsNullOrEmpty( nameInput.text)){
             nickname = nameInput.text;
+            //dante: try to save player name using server
             // Save player's name, don't ask next time
             PlayerPrefs.SetString("nickname",nickname);
-            main_panel.SetActive(true);
-            name_panel.SetActive(false);
+            
+           
+            if (!PhotonNetwork.IsConnected)
+            {
+                PhotonNetwork.LocalPlayer.NickName = nickname;
+                PhotonNetwork.ConnectUsingSettings();
+            }
+            else
+            {
+                Debug.Log("player name is invalid");    
+            }
+
         }
+
     }
+    #region Photon callbacks
+    public override void OnConnected()
+    {
+        Debug.Log("Succuessfully connect to internet");
+    }
+    public override void OnConnectedToMaster()
+    {
+        //close name panel when connected to server
+        main_panel.SetActive(true);
+        name_panel.SetActive(false);
+        Debug.Log(PhotonNetwork.LocalPlayer.NickName +" is Succuessfully connect to internet");
+    }
+    public override void OnCreatedRoom()
+    {
+        Debug.Log("room with password" + PhotonNetwork.CurrentRoom.Name + "is create ");
+    }
+    public override void OnJoinedRoom()
+    {
+        Debug.Log(PhotonNetwork.LocalPlayer.NickName +" is joined to password room:" + PhotonNetwork.CurrentRoom.Name);
+       //查看选的游戏是什么，以后可以根据用户的选择把人带进不同的游戏
+        /* if (PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey("gm"))
+        {
+            object gamemodeName;
+            if (PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue("gm",out gamemodeName))
+            {
+                Debug.Log(gamemodeName.ToString());
+            }
+        }*/
+    }
+  
+    #endregion
+
+
+
+
+
+
+
+
+
+
 }
