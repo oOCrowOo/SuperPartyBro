@@ -16,7 +16,7 @@ public class MainMenuManager : MonoBehaviourPunCallbacks
     public GameObject room_panel;
 
     public GameObject name_panel;
-
+    public GameObject playerList;
     public GameObject pin_panel;
 
     public Text nameInput;
@@ -93,18 +93,18 @@ public class MainMenuManager : MonoBehaviourPunCallbacks
     }
 
     public void onClickBack_Room(){
-        resetPlayers();
+        //resetPlayers();
         room_panel.SetActive(false);
         create_join_panel.SetActive(true);
     }
 
-    private void resetPlayers(){
+   /* private void resetPlayers(){
         for (int i = 1;i<=4;i++){
             setPlayerName("player" + i.ToString(),"waiting...");
              Image readyImg = GameObject.Find("player" + i.ToString()).GetComponentsInChildren<Image>()[1];
             readyImg.enabled = false;
         }
-    }
+    }*/
 
     public void onClickBack_About(){
         about_panel.SetActive(false);
@@ -132,13 +132,13 @@ public class MainMenuManager : MonoBehaviourPunCallbacks
         PhotonNetwork.CreateRoom(password, roomoptions);
         create_join_panel.SetActive(false);
         room_panel.SetActive(true);
-        setPlayerName(player_num, PhotonNetwork.LocalPlayer.NickName);
+        //setPlayerName(player_num, PhotonNetwork.LocalPlayer.NickName);
 
     }
 
-    public void setPlayerName(string player, string name){
+    /*public void setPlayerName(string player, string name){
         GameObject.Find(player).GetComponentInChildren<Text>().text = name;
-    }
+    }*/
 
     public void setPlayerReady(string player){
         Image readyImg = GameObject.Find(player).GetComponentsInChildren<Image>()[1];
@@ -221,6 +221,15 @@ public class MainMenuManager : MonoBehaviourPunCallbacks
                 Debug.Log(gamemodeName.ToString());
             }
         }*/
+        foreach (Player player in PhotonNetwork.PlayerList)
+        {
+            playerList.GetComponent<playername_Ent>().initialize(player.ActorNumber,player.NickName);
+        }
+
+
+
+
+
     }
     public override void OnJoinRoomFailed(short returnCode, string message)
     {
