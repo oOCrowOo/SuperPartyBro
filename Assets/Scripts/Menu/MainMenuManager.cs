@@ -119,8 +119,6 @@ public class MainMenuManager : MonoBehaviourPunCallbacks
         //host = true;
         // player_num = "player1";
         string password = PIN.text;
-     
-       
         RoomOptions roomoptions = new RoomOptions();
         roomoptions.MaxPlayers = 4;
         string[] roompropsInLobby = { "gm" }; // game mode
@@ -129,7 +127,6 @@ public class MainMenuManager : MonoBehaviourPunCallbacks
         //2. 转盘= roll
         //3。 摇可乐 = shake
         ExitGames.Client.Photon.Hashtable customesproperties = new ExitGames.Client.Photon.Hashtable();
-
         roomoptions.CustomRoomPropertiesForLobby = roompropsInLobby;
         roomoptions.CustomRoomProperties = customesproperties;
         PhotonNetwork.CreateRoom(password, roomoptions);
@@ -151,20 +148,26 @@ public class MainMenuManager : MonoBehaviourPunCallbacks
     public void onClickJoin(){
         create_join_panel.SetActive(false);
         pin_panel.SetActive(true);
+  
+        
     }
 
     public void onClickJoinConfirm(){
-        host = false;
-        pin_panel.SetActive(false);
-        room_panel.SetActive(true);
-        PIN.text = passwordInput.text;
+       
         
+        PIN.text = passwordInput.text;
+
+ 
+        PhotonNetwork.JoinRoom(PIN.text);
+        pin_panel.SetActive(false);
+        
+
         // TODO: change to set the player name in correct position
         // when connection is ready
-        player_num = "player2";
-        setPlayerName(player_num,nickname);
+        // player_num = "player2";
+        //setPlayerName(player_num,nickname);
         // TODO: remove harding coding owner name
-        setPlayerName("player1","Owner");
+        //setPlayerName("player1","Owner");
     }
 
 
@@ -207,8 +210,9 @@ public class MainMenuManager : MonoBehaviourPunCallbacks
     }
     public override void OnJoinedRoom()
     {
-        Debug.Log(PhotonNetwork.LocalPlayer.NickName +" is joined to password room:" + PhotonNetwork.CurrentRoom.Name);
-       //查看选的游戏是什么，以后可以根据用户的选择把人带进不同的游戏
+        Debug.Log(PhotonNetwork.LocalPlayer.NickName +" is joined to password room:" + PhotonNetwork.CurrentRoom.Name+ "playercount  " + PhotonNetwork.CurrentRoom.PlayerCount);
+        room_panel.SetActive(true);
+        //查看选的游戏是什么，以后可以根据用户的选择把人带进不同的游戏
         /* if (PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey("gm"))
         {
             object gamemodeName;
@@ -218,7 +222,11 @@ public class MainMenuManager : MonoBehaviourPunCallbacks
             }
         }*/
     }
-  
+    public override void OnJoinRoomFailed(short returnCode, string message)
+    {
+        Debug.Log(message);
+    }
+
     #endregion
 
 
