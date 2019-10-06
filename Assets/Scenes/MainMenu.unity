@@ -2493,13 +2493,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1287151146}
+  - component: {fileID: 1287151147}
   m_Layer: 5
   m_Name: Main
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1287151146
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2522,6 +2523,23 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!111 &1287151147
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1287151145}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 7400000, guid: be21d92343dec4443878b12e47b11136, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: 249db69be1814af4fadc39d6e0826f14, type: 2}
+  - {fileID: 7400000, guid: be21d92343dec4443878b12e47b11136, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 0
+  m_AnimatePhysics: 0
+  m_CullingType: 0
 --- !u!1 &1306997965
 GameObject:
   m_ObjectHideFlags: 0
@@ -3143,6 +3161,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1589667272}
+  - component: {fileID: 1589667273}
   m_Layer: 5
   m_Name: Create/Join
   m_TagString: Untagged
@@ -3172,6 +3191,23 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!111 &1589667273
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1589667271}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 7400000, guid: be21d92343dec4443878b12e47b11136, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: 249db69be1814af4fadc39d6e0826f14, type: 2}
+  - {fileID: 7400000, guid: be21d92343dec4443878b12e47b11136, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 0
+  m_AnimatePhysics: 0
+  m_CullingType: 0
 --- !u!1 &1657535196
 GameObject:
   m_ObjectHideFlags: 0
@@ -3212,6 +3248,8 @@ MonoBehaviour:
   passwordInput: {fileID: 1572415532}
   Team: []
   PIN: {fileID: 1310955195}
+  fadeoutClip: {fileID: 7400000, guid: 249db69be1814af4fadc39d6e0826f14, type: 2}
+  moveinClip: {fileID: 7400000, guid: be21d92343dec4443878b12e47b11136, type: 2}
 --- !u!4 &1657535198
 Transform:
   m_ObjectHideFlags: 0
@@ -3497,6 +3535,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2039484228}
+  - component: {fileID: 2039484229}
   m_Layer: 5
   m_Name: About
   m_TagString: Untagged
@@ -3525,6 +3564,23 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!111 &2039484229
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2039484227}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 7400000, guid: be21d92343dec4443878b12e47b11136, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: 249db69be1814af4fadc39d6e0826f14, type: 2}
+  - {fileID: 7400000, guid: be21d92343dec4443878b12e47b11136, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 0
+  m_AnimatePhysics: 0
+  m_CullingType: 0
 --- !u!1 &2107357206
 GameObject:
   m_ObjectHideFlags: 0

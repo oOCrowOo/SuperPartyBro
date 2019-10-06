@@ -31,6 +31,8 @@ public class MainMenuManager : MonoBehaviourPunCallbacks
 	
     private bool firstConnect = true;
 
+    public AnimationClip fadeoutClip;
+    public AnimationClip moveinClip;
 
 
     // Start is called before the first frame update
@@ -71,9 +73,32 @@ public class MainMenuManager : MonoBehaviourPunCallbacks
         return host;
     }
 
+    IEnumerator switchPanel(GameObject oldPanel, GameObject newPanel)
+    {
+        // Play the fade out animation for the old panel
+        Animation fadeoutAnimation = oldPanel.GetComponent<Animation>();
+        float duration = fadeoutClip.length;
+        fadeoutAnimation.clip = fadeoutClip;
+        fadeoutAnimation.Play();
+        // after the seconds of the clip length
+        yield return new WaitForSeconds(duration);
+
+        // Play the move in animation for the new panel
+        newPanel.SetActive(true);
+        Animation moveinAnimation = newPanel.GetComponent<Animation>();
+        moveinAnimation.clip = moveinClip;
+        moveinAnimation.Play();
+        oldPanel.SetActive(false);
+        oldPanel.GetComponent<Transform>().localPosition = new Vector3(0,0,0);
+    }
+
     public void onClickStart(){
-        create_join_panel.SetActive(true);
-        main_panel.SetActive(false);
+        // create_join_panel.SetActive(true);
+        // //main_panel.GetComponent<Animation>().Play();
+        // main_panel.SetActive(false);
+
+        StartCoroutine(switchPanel(main_panel,create_join_panel));
+         
     }
 
     public void onClickGameStart(){
@@ -86,13 +111,15 @@ public class MainMenuManager : MonoBehaviourPunCallbacks
     }
 
     public void onClickAbout(){
-        about_panel.SetActive(true);
-        main_panel.SetActive(false);
+        StartCoroutine(switchPanel(main_panel,about_panel));
+        // about_panel.SetActive(true);
+        // main_panel.SetActive(false);
     }
 
     public void onClickBack_Create_Join(){
-        create_join_panel.SetActive(false);
-        main_panel.SetActive(true);
+        StartCoroutine(switchPanel(create_join_panel,main_panel));
+        // create_join_panel.SetActive(false);
+        // main_panel.SetActive(true);
     }
 
     public void onClickBack_Room(){
@@ -114,8 +141,9 @@ public class MainMenuManager : MonoBehaviourPunCallbacks
     }*/
 
     public void onClickBack_About(){
-        about_panel.SetActive(false);
-        main_panel.SetActive(true);
+        StartCoroutine(switchPanel(about_panel,main_panel));
+        // about_panel.SetActive(false);
+        // main_panel.SetActive(true);
     }
 
     public void onClickQuit(){
