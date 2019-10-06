@@ -33,6 +33,8 @@ public class MainMenuManager : MonoBehaviourPunCallbacks
 
     public AnimationClip fadeoutClip;
     public AnimationClip moveinClip;
+    public AnimationClip popupClip;
+    public AnimationClip disappearClip;
 
 
     // Start is called before the first frame update
@@ -41,6 +43,9 @@ public class MainMenuManager : MonoBehaviourPunCallbacks
         // TODO: debug usage, remove later
         PlayerPrefs.DeleteAll();
         name_panel.SetActive(true);
+        
+        name_panel.GetComponent<Animation>().Play();
+        Debug.Log(name_panel.GetComponent<Animation>().clip);
         main_panel.SetActive(false);
         // Find user's preset name
         //*******
@@ -73,12 +78,12 @@ public class MainMenuManager : MonoBehaviourPunCallbacks
         return host;
     }
 
-    IEnumerator switchPanel(GameObject oldPanel, GameObject newPanel)
+    public IEnumerator switchPanel(GameObject oldPanel, GameObject newPanel, AnimationClip leaveClip, AnimationClip inClip)
     {
         // Play the fade out animation for the old panel
         Animation fadeoutAnimation = oldPanel.GetComponent<Animation>();
         float duration = fadeoutClip.length;
-        fadeoutAnimation.clip = fadeoutClip;
+        fadeoutAnimation.clip = leaveClip;
         fadeoutAnimation.Play();
         // after the seconds of the clip length
         yield return new WaitForSeconds(duration);
@@ -86,7 +91,7 @@ public class MainMenuManager : MonoBehaviourPunCallbacks
         // Play the move in animation for the new panel
         newPanel.SetActive(true);
         Animation moveinAnimation = newPanel.GetComponent<Animation>();
-        moveinAnimation.clip = moveinClip;
+        moveinAnimation.clip = inClip;
         moveinAnimation.Play();
         oldPanel.SetActive(false);
         oldPanel.GetComponent<Transform>().localPosition = new Vector3(0,0,0);
@@ -97,7 +102,7 @@ public class MainMenuManager : MonoBehaviourPunCallbacks
         // //main_panel.GetComponent<Animation>().Play();
         // main_panel.SetActive(false);
 
-        StartCoroutine(switchPanel(main_panel,create_join_panel));
+        StartCoroutine(switchPanel(main_panel,create_join_panel,fadeoutClip,moveinClip));
          
     }
 
@@ -111,13 +116,17 @@ public class MainMenuManager : MonoBehaviourPunCallbacks
     }
 
     public void onClickAbout(){
-        StartCoroutine(switchPanel(main_panel,about_panel));
+        StartCoroutine(switchPanel(main_panel,about_panel,fadeoutClip,moveinClip));
         // about_panel.SetActive(true);
         // main_panel.SetActive(false);
     }
 
+    public void onClickBack_Join(){
+        StartCoroutine(switchPanel(pin_panel,create_join_panel,disappearClip,moveinClip));
+    }
+
     public void onClickBack_Create_Join(){
-        StartCoroutine(switchPanel(create_join_panel,main_panel));
+        StartCoroutine(switchPanel(create_join_panel,main_panel,fadeoutClip,moveinClip));
         // create_join_panel.SetActive(false);
         // main_panel.SetActive(true);
     }
@@ -141,7 +150,7 @@ public class MainMenuManager : MonoBehaviourPunCallbacks
     }*/
 
     public void onClickBack_About(){
-        StartCoroutine(switchPanel(about_panel,main_panel));
+        StartCoroutine(switchPanel(about_panel,main_panel,fadeoutClip,moveinClip));
         // about_panel.SetActive(false);
         // main_panel.SetActive(true);
     }
@@ -183,10 +192,10 @@ public class MainMenuManager : MonoBehaviourPunCallbacks
     }
 
     public void onClickJoin(){
-        create_join_panel.SetActive(false);
-        pin_panel.SetActive(true);
-  
+        // create_join_panel.SetActive(false);
+        // pin_panel.SetActive(true);
         
+        StartCoroutine(switchPanel(create_join_panel,pin_panel,fadeoutClip,popupClip));
     }
 
     public void onClickJoinConfirm(){
@@ -239,8 +248,9 @@ public class MainMenuManager : MonoBehaviourPunCallbacks
         if(firstConnect){
             firstConnect = false;
             //close name panel when connected to server
-            main_panel.SetActive(true);
-            name_panel.SetActive(false);
+            StartCoroutine(switchPanel(name_panel,main_panel,disappearClip,moveinClip));
+            // main_panel.SetActive(true);
+            // name_panel.SetActive(false);
             Debug.Log(PhotonNetwork.LocalPlayer.NickName +" is Succuessfully connect to internet");
         }
         
@@ -248,13 +258,14 @@ public class MainMenuManager : MonoBehaviourPunCallbacks
     public override void OnCreatedRoom()
     {
         Debug.Log("room with password" + PhotonNetwork.CurrentRoom.Name + "is create ");
-        create_join_panel.SetActive(false);
-        RoomPanel.SetActive(true);
+        // create_join_panel.SetActive(false);
+        // RoomPanel.SetActive(true);
+        StartCoroutine(switchPanel(create_join_panel,RoomPanel,fadeoutClip,moveinClip));
     }
     public override void OnJoinedRoom()
     {
         Debug.Log(PhotonNetwork.LocalPlayer.NickName +" is joined to password room:" + PhotonNetwork.CurrentRoom.Name+ "playercount  " + PhotonNetwork.CurrentRoom.PlayerCount);
-        RoomPanel.SetActive(true);
+        StartCoroutine(switchPanel(create_join_panel,RoomPanel,fadeoutClip,moveinClip));
         //查看选的游戏是什么，以后可以根据用户的选择把人带进不同的游戏
         /* if (PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey("gm"))
         {
