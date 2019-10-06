@@ -14,15 +14,24 @@ public class RoomPanelController : MonoBehaviourPun {
 	public Button readyButton;			//准备/开始游戏按钮
 	public Text promptMessage;			//提示信息
 
+	public Text PIN;
+
+
+	private MainMenuManager mManager;
+
 	PhotonView pView;
 	int teamSize;
 	Text[] texts;
 	ExitGames.Client.Photon.Hashtable costomProperties;
 
 	void OnEnable () {
+		mManager = GameObject.Find("MainMenuManager").GetComponent<MainMenuManager>();
+		PIN.text = mManager.getPIN();
 		pView = GetComponent<PhotonView>();					//获取PhotonView组件
 		if(!PhotonNetwork.IsConnected)return;
 		promptMessage.text = "";							//提示信息
+
+		
 
 		backButton.onClick.RemoveAllListeners ();			//移除返回按钮绑定的所有监听事件
 		backButton.onClick.AddListener (delegate() {		//为返回按钮绑定新的监听事件
@@ -34,6 +43,8 @@ public class RoomPanelController : MonoBehaviourPun {
 		teamSize = 4;		//计算每队人数
 		DisableTeamPanel ();								//初始化队伍面板
 		UpdateTeamPanel (false);							//更新队伍面板（false表示不显示本地玩家信息）
+
+		//Debug.Log(PhotonNetwork.IsMasterClient);
 
 		for (int i = 0; i < teamSize; i++) {	
 			if (!Team [i].activeSelf) {		//在队伍找到空余位置

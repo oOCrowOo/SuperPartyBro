@@ -29,6 +29,7 @@ public class MainMenuManager : MonoBehaviourPunCallbacks
     private string player_num = "player1";
     private bool host = true;
 	
+    private bool firstConnect = true;
 
 
 
@@ -100,6 +101,10 @@ public class MainMenuManager : MonoBehaviourPunCallbacks
         create_join_panel.SetActive(true);
     }
 
+    public string getPIN(){
+        return PIN.text;
+    }
+
    /* private void resetPlayers(){
         for (int i = 1;i<=4;i++){
             setPlayerName("player" + i.ToString(),"waiting...");
@@ -132,8 +137,8 @@ public class MainMenuManager : MonoBehaviourPunCallbacks
         roomoptions.CustomRoomPropertiesForLobby = roompropsInLobby;
         roomoptions.CustomRoomProperties = customesproperties;
         PhotonNetwork.CreateRoom(password, roomoptions);
-        create_join_panel.SetActive(false);
-        RoomPanel.SetActive(true);
+        // create_join_panel.SetActive(false);
+        // RoomPanel.SetActive(true);
         //setPlayerName(player_num, PhotonNetwork.LocalPlayer.NickName);
 
     }
@@ -201,14 +206,20 @@ public class MainMenuManager : MonoBehaviourPunCallbacks
     }
     public override void OnConnectedToMaster()
     {
-        //close name panel when connected to server
-        main_panel.SetActive(true);
-        name_panel.SetActive(false);
-        Debug.Log(PhotonNetwork.LocalPlayer.NickName +" is Succuessfully connect to internet");
+        if(firstConnect){
+            firstConnect = false;
+            //close name panel when connected to server
+            main_panel.SetActive(true);
+            name_panel.SetActive(false);
+            Debug.Log(PhotonNetwork.LocalPlayer.NickName +" is Succuessfully connect to internet");
+        }
+        
     }
     public override void OnCreatedRoom()
     {
         Debug.Log("room with password" + PhotonNetwork.CurrentRoom.Name + "is create ");
+        create_join_panel.SetActive(false);
+        RoomPanel.SetActive(true);
     }
     public override void OnJoinedRoom()
     {
