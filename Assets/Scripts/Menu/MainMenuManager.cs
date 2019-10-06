@@ -125,6 +125,8 @@ public class MainMenuManager : MonoBehaviourPunCallbacks
     public void onClickCreate(){
         //host = true;
         // player_num = "player1";
+        // random pin number every time
+        PIN.text = Random.Range(1000,9999).ToString();
         string password = PIN.text;
         RoomOptions roomoptions = new RoomOptions();
         roomoptions.MaxPlayers = 4;

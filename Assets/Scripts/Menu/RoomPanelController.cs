@@ -31,6 +31,8 @@ public class RoomPanelController : MonoBehaviourPun {
 		if(!PhotonNetwork.IsConnected)return;
 		promptMessage.text = "";							//提示信息
 
+		// master client will ask all other players to load the same scene
+		PhotonNetwork.AutomaticallySyncScene = true;
 		
 
 		backButton.onClick.RemoveAllListeners ();			//移除返回按钮绑定的所有监听事件
@@ -66,7 +68,7 @@ public class RoomPanelController : MonoBehaviourPun {
 	}
 
 	void Update(){
-		UpdateTeamPanel (false);
+		UpdateTeamPanel (true);
 	}
 
 	
@@ -141,6 +143,8 @@ public class RoomPanelController : MonoBehaviourPun {
 		}
 		promptMessage.text = "";										//清空提示信息
 		// PhotonNetwork.CurrentRoom.Open = false;								//设置房间的open属性，使游戏大厅的玩家无法加入此房间
+
+		PhotonNetwork.LoadLevel("BoxScene");
 																
 	}
 

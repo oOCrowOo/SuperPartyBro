@@ -4056,6 +4056,11 @@ PrefabInstance:
       propertyPath: viewIdField
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4340608718439989441, guid: 6fd9e3a61993bd54b97cb3265c07225a,
+        type: 3}
+      propertyPath: ObservedComponentsFoldoutOpen
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4340608718439989440, guid: 6fd9e3a61993bd54b97cb3265c07225a,
         type: 3}
       propertyPath: lobbyPanel
