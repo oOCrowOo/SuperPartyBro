@@ -38,8 +38,7 @@ public class RoomPanelController : MonoBehaviourPun {
 		backButton.onClick.RemoveAllListeners ();			//移除返回按钮绑定的所有监听事件
 		backButton.onClick.AddListener (delegate() {		//为返回按钮绑定新的监听事件
 			PhotonNetwork.LeaveRoom ();						//客户端离开游戏房间
-			lobbyPanel.SetActive (true);					//激活游戏大厅面板
-			roomPanel.SetActive (false);					//禁用游戏房间面板
+			StartCoroutine(mManager.switchPanel(mManager.RoomPanel,mManager.create_join_panel,mManager.fadeoutClip,mManager.moveinClip));					//禁用游戏房间面板
 		});
 
 		teamSize = 4;		//计算每队人数
