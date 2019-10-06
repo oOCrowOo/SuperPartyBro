@@ -13,20 +13,22 @@ public class MainMenuManager : MonoBehaviourPunCallbacks
     public GameObject main_panel;
     public GameObject about_panel;
     public GameObject create_join_panel;
-    public GameObject room_panel;
+    // public GameObject room_panel;
 
     public GameObject name_panel;
     public GameObject playerList;
     public GameObject pin_panel;
+	public GameObject RoomPanel;
 
     public Text nameInput;
     public InputField passwordInput;
-
+	public GameObject[] Team;
     public Text PIN;
 
     private string nickname;
     private string player_num = "player1";
     private bool host = true;
+	
 
 
 
@@ -94,7 +96,7 @@ public class MainMenuManager : MonoBehaviourPunCallbacks
 
     public void onClickBack_Room(){
         //resetPlayers();
-        room_panel.SetActive(false);
+        RoomPanel.SetActive(false);
         create_join_panel.SetActive(true);
     }
 
@@ -131,7 +133,7 @@ public class MainMenuManager : MonoBehaviourPunCallbacks
         roomoptions.CustomRoomProperties = customesproperties;
         PhotonNetwork.CreateRoom(password, roomoptions);
         create_join_panel.SetActive(false);
-        room_panel.SetActive(true);
+        RoomPanel.SetActive(true);
         //setPlayerName(player_num, PhotonNetwork.LocalPlayer.NickName);
 
     }
@@ -211,7 +213,7 @@ public class MainMenuManager : MonoBehaviourPunCallbacks
     public override void OnJoinedRoom()
     {
         Debug.Log(PhotonNetwork.LocalPlayer.NickName +" is joined to password room:" + PhotonNetwork.CurrentRoom.Name+ "playercount  " + PhotonNetwork.CurrentRoom.PlayerCount);
-        room_panel.SetActive(true);
+        RoomPanel.SetActive(true);
         //查看选的游戏是什么，以后可以根据用户的选择把人带进不同的游戏
         /* if (PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey("gm"))
         {
@@ -221,10 +223,46 @@ public class MainMenuManager : MonoBehaviourPunCallbacks
                 Debug.Log(gamemodeName.ToString());
             }
         }*/
-        foreach (Player player in PhotonNetwork.PlayerList)
+		int teamSize = 4;
+		Text[] texts;
+		ExitGames.Client.Photon.Hashtable costomProperties;
+		/* DisableTeamPanel();
+		UpdateTeamPanel();
+        for(int i = 0;i<teamSize;i++)
         {
-            playerList.GetComponent<playername_Ent>().initialize(player.ActorNumber,player.NickName);
+			if(!Team[i].activeSelf){
+				Team[i].SetActive(true);
+				texts=Team[i].GetComponentsInChildren<Text>();
+				texts[0].text=PhotonNetwork.LocalPlayer.NickName;
+				costomProperties = new ExitGames.Client.Photon.Hashtable()
+				{
+					{"TeamNum",i},
+					{"isReady",false}
+				};
+			}
+            PhotonNetwork.player.SetCustomProperties(costomProperties);
+			break;
         }
+		
+		void DisableTeamPanel()
+		{
+			for(int i =0;i<4;i++)
+			{
+				Team[i].SetActive(false);
+			}
+		}
+		
+		void UpdateTeamPanel()
+		{
+			GameObject go;
+			foreach(PhotonPlayer p in PhotonNetwork.playerList){
+				costomProperties = p.customProperties;
+				go = Team[(int)costomProperties["TeamNum"]];
+				go.SetActive(true);
+				texts=go.GetComponentsInChildren<Text>();
+			}
+			texts[0]=p.name;
+		} */
 
 
 

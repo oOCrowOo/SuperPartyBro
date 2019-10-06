@@ -3,7 +3,18 @@ guid: f6490ea1217170c41ba3969dc7e8d066
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - main_panel: {instanceID: 0}
+  - about_panel: {instanceID: 0}
+  - create_join_panel: {instanceID: 0}
+  - room_panel: {instanceID: 0}
+  - name_panel: {instanceID: 0}
+  - playerList: {instanceID: 0}
+  - pin_panel: {instanceID: 0}
+  - RoomPanel: {fileID: 123572, guid: 2853fb0e2b1257b4faef9ad11c0324b0, type: 3}
+  - nameInput: {instanceID: 0}
+  - passwordInput: {instanceID: 0}
+  - PIN: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
