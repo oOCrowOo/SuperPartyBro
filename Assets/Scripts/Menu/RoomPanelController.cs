@@ -65,6 +65,10 @@ public class RoomPanelController : MonoBehaviourPun {
 		ReadyButtonControl ();	//设置ReadyButton的按钮事件
 	}
 
+	void Update(){
+		UpdateTeamPanel (false);
+	}
+
 	
 	// 禁用队伍面板
 	void DisableTeamPanel(){
