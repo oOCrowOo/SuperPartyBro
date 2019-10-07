@@ -275,9 +275,9 @@ public class MainMenuManager : MonoBehaviourPunCallbacks
                 Debug.Log(gamemodeName.ToString());
             }
         }*/
-		int teamSize = 4;
-		Text[] texts;
-		ExitGames.Client.Photon.Hashtable costomProperties;
+		// int teamSize = 4;
+		// Text[] texts;
+		// ExitGames.Client.Photon.Hashtable costomProperties;
 		/* DisableTeamPanel();
 		UpdateTeamPanel();
         for(int i = 0;i<teamSize;i++)
