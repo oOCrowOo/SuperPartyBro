@@ -16,7 +16,7 @@ public class ARController : MonoBehaviour
 
     public GameObject GridPrefab;
 
-    public GameObject PostBox;
+    public GameObject Box;
 
     public GameObject ARCamera;
 
@@ -61,14 +61,14 @@ public class ARController : MonoBehaviour
             //Now place the portal on top of the tracked plane that we touched
 
             //Enable the portal
-            PostBox.SetActive(true);
+            Box.SetActive(true);
 
             //Create a new Anchor
             Anchor anchor = hit.Trackable.CreateAnchor(hit.Pose);
 
             //Set the position pf the portal to be the same as the hit position
-            PostBox.transform.position = hit.Pose.position;
-            PostBox.transform.rotation = hit.Pose.rotation;
+            Box.transform.position = hit.Pose.position;
+            Box.transform.rotation = hit.Pose.rotation;
             //We want the portal to face the camera
             Vector3 cameraPosition = ARCamera.transform.position;
 
@@ -76,11 +76,11 @@ public class ARController : MonoBehaviour
             cameraPosition.y = hit.Pose.position.y;
 
             //Rotate the portal to face the camera
-            PostBox.transform.LookAt(cameraPosition, PostBox.transform.up);
-            PostBox.transform.Rotate(new Vector3(0, 180, 0));
+            Box.transform.LookAt(cameraPosition, Box.transform.up);
+            Box.transform.Rotate(new Vector3(0, 180, 0));
 
             //ARCore will keep unstanding the world and update the anchor accordingly hence we need to attach our portal to the anchor
-            PostBox.transform.parent = anchor.transform;
+            Box.transform.parent = anchor.transform;
             
 
         }
