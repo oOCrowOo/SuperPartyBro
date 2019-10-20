@@ -43,9 +43,16 @@ def quickSort(arr,low,high):
     }
 
     public void tap(){
-        count += 2;
-        while(PYTHONCODE[count] == ' '){
-            count+=1;
-        }
+         if (count < codeLength){
+            count += 4;
+            while(PYTHONCODE[count] == ' '){
+                count+=1;
+            }
+         }
+         else{
+             count = codeLength;
+         }
+        
+    
     }
 }
