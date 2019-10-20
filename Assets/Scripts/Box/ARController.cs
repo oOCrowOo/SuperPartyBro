@@ -20,10 +20,15 @@ public class ARController : MonoBehaviour
 
     public GameObject ARCamera;
 
+    public GameObject PaperPanel;
+
+    private bool EnableBox;
+
+
     // Start is called before the first frame update
     void Start()
     {
-
+        EnableBox = false;
     }
 
     // Update is called once per frame
@@ -54,35 +59,40 @@ public class ARController : MonoBehaviour
             return;
         }
 
-        //Check if the user touched any of the tracked planes
-        TrackableHit hit;
-        if (Frame.Raycast(touch.position.x, touch.position.y, TrackableHitFlags.PlaneWithinPolygon, out hit))
+        if(!EnableBox)
         {
-            //Now place the portal on top of the tracked plane that we touched
+            //Check if the user touched any of the tracked planes
+            TrackableHit hit;
+            if (Frame.Raycast(touch.position.x, touch.position.y, TrackableHitFlags.PlaneWithinPolygon, out hit))
+            {
+                //Now place the portal on top of the tracked plane that we touched
 
-            //Enable the portal
-            Box.SetActive(true);
+                //Enable the portal
+                Box.SetActive(true);
 
-            //Create a new Anchor
-            Anchor anchor = hit.Trackable.CreateAnchor(hit.Pose);
+                //Create a new Anchor
+                Anchor anchor = hit.Trackable.CreateAnchor(hit.Pose);
 
-            //Set the position pf the portal to be the same as the hit position
-            Box.transform.position = hit.Pose.position;
-            Box.transform.rotation = hit.Pose.rotation;
-            //We want the portal to face the camera
-            Vector3 cameraPosition = ARCamera.transform.position;
+                //Set the position pf the portal to be the same as the hit position
+                Box.transform.position = hit.Pose.position;
+                Box.transform.rotation = hit.Pose.rotation;
+                //We want the portal to face the camera
+                Vector3 cameraPosition = ARCamera.transform.position;
 
-            //The portal should only rotate the Y axis
-            cameraPosition.y = hit.Pose.position.y;
+                //The portal should only rotate the Y axis
+                cameraPosition.y = hit.Pose.position.y;
 
-            //Rotate the portal to face the camera
-            Box.transform.LookAt(cameraPosition, Box.transform.up);
-            Box.transform.Rotate(new Vector3(0, 180, 0));
+                //Rotate the portal to face the camera
+                Box.transform.LookAt(cameraPosition, Box.transform.up);
+                Box.transform.Rotate(new Vector3(0, 180, 0));
 
-            //ARCore will keep unstanding the world and update the anchor accordingly hence we need to attach our portal to the anchor
-            Box.transform.parent = anchor.transform;
-            
+                //ARCore will keep unstanding the world and update the anchor accordingly hence we need to attach our portal to the anchor
+                Box.transform.parent = anchor.transform;
+                EnableBox = true;
 
+                PaperPanel.SetActive(true);
+            }
         }
+        
     }
 }
