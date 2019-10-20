@@ -268,7 +268,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 893516857}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -10}
+  m_LocalPosition: {x: 0, y: 1, z: -10.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -294,6 +294,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sprayClip: {fileID: 8300000, guid: 839e11910e36ece4fac8209876d226c8, type: 3}
   sprayedCokeParticle: {fileID: 52132042}
+  canModel: {fileID: 968637891}
 --- !u!82 &968637893
 AudioSource:
   m_ObjectHideFlags: 0
