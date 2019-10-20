@@ -5,19 +5,52 @@ using UnityEngine;
 public class cokeshakerController : MonoBehaviour
 {
 
+    const float SHAKEAMOUNTLIMIT = 100f;
 
     public AudioClip sprayClip;
     public GameObject sprayedCokeParticle;
+
+    public GameObject canModel;
+
+    private float shakeAmountTotal = 0f;
+
+    private Vector3 acceleration;
+
+    private bool duringShaking = true;
+
+    private bool hasSprayed = false;
+
     // Start is called before the first frame update
     void Start()
     {
-        StartCoroutine(spray());
+        // StartCoroutine(spray());
+        acceleration = Input.acceleration;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if(duringShaking){
+            shake();
+        }
         
+        if (shakeAmountTotal >= SHAKEAMOUNTLIMIT && !hasSprayed){
+            StartCoroutine(spray());
+            hasSprayed = true;
+            duringShaking = false;
+        }
+        
+    }
+
+    public void shake(){
+        // Debug.Log(Input.acceleration);
+        float yDiff = (Input.acceleration.y - acceleration.y) / 10f;
+        float yDiffabs = Mathf.Abs(yDiff);
+        shakeAmountTotal += yDiffabs;
+        Vector3 oldPosition = canModel.transform.position;
+        Vector3 newPosition = new Vector3(oldPosition.x,oldPosition.y+yDiff,oldPosition.z);
+        canModel.transform.position = newPosition;
+        acceleration = Input.acceleration;
     }
 
     public IEnumerator spray(){
