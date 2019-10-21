@@ -8,6 +8,7 @@ public class BoxButtonController : MonoBehaviour
     public GameObject PaperPanel;
     private Button SubmitButton;
     private InputField PlayerInput;
+    public Animation PanelAnim;
 
     private void Awake()
     {
@@ -18,7 +19,8 @@ public class BoxButtonController : MonoBehaviour
     {
         PlayerInput = GameObject.Find("InputField").GetComponent<InputField>();
         Debug.Log(PlayerInput.text);
-        PaperPanel.SetActive(false);
+        PanelAnim.Play();
+       //PaperPanel.SetActive(false);
     }
 
 }

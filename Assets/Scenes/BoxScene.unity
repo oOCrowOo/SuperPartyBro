@@ -596,6 +596,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PaperPanel: {fileID: 1660432426}
+  PanelAnim: {fileID: 1660432430}
 --- !u!1001 &448847057
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1084,13 +1085,14 @@ GameObject:
   - component: {fileID: 1660432427}
   - component: {fileID: 1660432429}
   - component: {fileID: 1660432428}
+  - component: {fileID: 1660432430}
   m_Layer: 5
   m_Name: Paper
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1660432427
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1106,7 +1108,7 @@ RectTransform:
   - {fileID: 294433654}
   m_Father: {fileID: 1622763648}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 80.19}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 303.59998}
@@ -1147,3 +1149,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1660432426}
   m_CullTransparentMesh: 0
+--- !u!111 &1660432430
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1660432426}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 7400000, guid: 612fda5241aa12540bcb7843d7bf2bce, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: 612fda5241aa12540bcb7843d7bf2bce, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 0
+  m_AnimatePhysics: 0
+  m_CullingType: 0
