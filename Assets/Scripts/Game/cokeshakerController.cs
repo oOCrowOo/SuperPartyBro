@@ -20,11 +20,18 @@ public class cokeshakerController : MonoBehaviour
 
     private bool hasSprayed = false;
 
+    public GameManager myManager;
+
     // Start is called before the first frame update
     void Start()
     {
         // StartCoroutine(spray());
         acceleration = Input.acceleration;
+    }
+
+    void OnEnable(){
+        duringShaking = true;
+        hasSprayed = false;
     }
 
     // Update is called once per frame
@@ -39,10 +46,18 @@ public class cokeshakerController : MonoBehaviour
             StartCoroutine(spray());
             hasSprayed = true;
             duringShaking = false;
+
+            // finished the game locally
+            
+            
         }
         
     }
 
+    private void reset(){
+        shakeAmountTotal = 0;
+
+    }
     public void shake(){
         // Debug.Log(Input.acceleration);
         float yDiff = (Input.acceleration.y - acceleration.y) / 10f;
@@ -55,10 +70,13 @@ public class cokeshakerController : MonoBehaviour
     }
 
     public IEnumerator spray(){
+        canModel.transform.localPosition = new Vector3(0,-0.2f,1);
         sprayedCokeParticle.SetActive(true);
         this.GetComponent<AudioSource>().clip = sprayClip;
         this.GetComponent<AudioSource>().Play();
         yield return new WaitForSeconds(sprayClip.length);
         sprayedCokeParticle.SetActive(false);
+        reset();
+        myManager.gameOver();
     }
 }

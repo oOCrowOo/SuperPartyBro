@@ -18,7 +18,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     const string cokeShakingInstruction = @"Welcome to the game Cola Shaker! After the count down, please shake your phone as crazy as possible! The player who let the cola spray out first will be the winner!";
 
     enum State {Scaning, writingPunishment, beforeTurntable, turntableStart, turntableFinish,
-     pouring, drinking, beforeCokeShaking,cokeShaking ,beforeCodingGame}
+     pouring, drinking, beforeCokeShaking,cokeShaking ,beforeCodingGame,codingGame,punishment}
 
 
     private State myState;
@@ -48,6 +48,8 @@ public class GameManager : MonoBehaviourPunCallbacks
     private GameObject ARCamera;
 
     private int chosenPlayerIndex = 0;
+
+    public GameObject victoryPanel;
 
     public GameObject cokeCan;
     // Start is called before the first frame update
@@ -83,6 +85,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     // Update is called once per frame
     void Update()
     {
+        //Debug.Log(myState);
         switch (myState)
         {
             case State.Scaning:
@@ -133,6 +136,7 @@ public class GameManager : MonoBehaviourPunCallbacks
                 break;
             case State.pouring:
             case State.drinking:
+            case State.punishment:
                 everyoneReady = everyoneCheck("ready");
                 // Event finished, back to turntable
                 // Debug.Log("=======================");
@@ -149,7 +153,21 @@ public class GameManager : MonoBehaviourPunCallbacks
                     countDownPanel.SetActive(true);
                     waitingPanel.SetActive(false);
                     countdownController.countDown();
-
+                    setProperty("finished",false);
+                }
+                break;
+            case State.cokeShaking:
+                everyoneReady = everyoneCheck("finished");
+                if (everyoneReady){
+                    Player punisher = PhotonNetwork.PlayerList[getPunisherId()];
+                    instructionText.text = "Congrats to Player " + getWinner() + 
+                    "! You win this mini game! And sorry for the player " + getLoser() + 
+                    ", you need to take the punishment from Player " + punisher.NickName + ": " + punisher.CustomProperties["punishment"];
+                    victoryPanel.SetActive(false);
+                    cokeCan.SetActive(false);
+                    waitingPanel.SetActive(false);
+                    myState = State.punishment;
+                    showPanelwithAnim(instructionPanel,popupClip);
                 }
                 break;
             default:
@@ -157,14 +175,76 @@ public class GameManager : MonoBehaviourPunCallbacks
         }
     }
 
+    private int getPunisherId(){
+        return (int)PhotonNetwork.MasterClient.CustomProperties["punisherId"];
+    }
+
+    private string getWinner(){
+        Player winner = null;
+        int rank = 999;
+        foreach(Player p in PhotonNetwork.PlayerList){
+            int newRank = (int)p.CustomProperties["rank"];
+            if (newRank < rank){
+                rank = newRank;
+                winner = p;
+            }
+        }
+        return winner.NickName;
+    }
+
+    private string getLoser(){
+        Player loser = null;
+        int rank = -1;
+        foreach(Player p in PhotonNetwork.PlayerList){
+            int newRank = (int)p.CustomProperties["rank"];
+            if (newRank > rank){
+                rank = newRank;
+                loser = p;
+            }
+        }
+        return loser.NickName;
+    }
+
     public void gameStart(){
         countDownPanel.SetActive(false);
+        
+        if(PhotonNetwork.LocalPlayer.IsMasterClient){
+            setProperty("punisherId",Random.Range(0,PhotonNetwork.PlayerList.Length - 1));
+        }
         switch(myState){
             case State.cokeShaking:
                 cokeCan.SetActive(true);
                 cokeCan.transform.parent = ARCamera.transform; 
                 cokeCan.transform.localPosition = new Vector3(0,-0.2f,1);
                 cokeCan.transform.localRotation = Quaternion.identity;
+                break;
+        }
+    }
+
+    public void gameOver(){
+        setProperty("ready",false);
+        switch(myState){
+            case State.cokeShaking:
+                int rank = 0;
+                foreach (Player p in PhotonNetwork.PlayerList) {
+                    if (!p.IsLocal){
+                        if((bool)p.CustomProperties["finished"]){
+                            rank++;
+                        }
+                    }
+                }
+                setProperty("finished",true);
+                setProperty("rank",rank);
+                victoryPanel.SetActive(true);
+                if (rank == 0){
+                    // winner!
+                    victoryPanel.GetComponentInChildren<Text>().text = "Victory!";
+                }
+                else{
+                    // loser but no punishment
+                    victoryPanel.GetComponentInChildren<Text>().text = "Defeat!";
+                }
+
                 break;
         }
     }
@@ -287,6 +367,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             case State.pouring:
             case State.drinking:
             case State.beforeCokeShaking:
+            case State.punishment:
                 setProperty("ready",true);
                 //showPanelwithAnim(waitingPanel,popupClip);
                 break;
