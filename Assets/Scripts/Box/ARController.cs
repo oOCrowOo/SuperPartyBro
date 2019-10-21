@@ -26,6 +26,8 @@ public class ARController : MonoBehaviour
 
     public GameManager myManager;
 
+    public GameObject cola;
+
 
     // Start is called before the first frame update
     void Start()
@@ -70,6 +72,7 @@ public class ARController : MonoBehaviour
                 //Now place the portal on top of the tracked plane that we touched
 
                 //Enable the portal
+
                 Box.SetActive(true);
 
                 //Create a new Anchor
@@ -91,6 +94,12 @@ public class ARController : MonoBehaviour
                 //ARCore will keep unstanding the world and update the anchor accordingly hence we need to attach our portal to the anchor
                 Box.transform.parent = anchor.transform;
                 EnableBox = true;
+
+                // cola.SetActive(true);
+                // cola.transform.parent = ARCamera.transform; 
+                // cola.transform.localPosition = new Vector3(0,-0.2f,1);
+                // cola.transform.localRotation = Quaternion.identity;
+                
 
                 // Clicked screen, box shows up, state switch
                 PaperPanel.SetActive(true);

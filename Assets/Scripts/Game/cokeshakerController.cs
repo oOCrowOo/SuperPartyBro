@@ -29,7 +29,8 @@ public class cokeshakerController : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {
+    {   
+        //return;
         if(duringShaking){
             shake();
         }
@@ -47,9 +48,9 @@ public class cokeshakerController : MonoBehaviour
         float yDiff = (Input.acceleration.y - acceleration.y) / 10f;
         float yDiffabs = Mathf.Abs(yDiff);
         shakeAmountTotal += yDiffabs;
-        Vector3 oldPosition = canModel.transform.position;
+        Vector3 oldPosition = canModel.transform.localPosition;
         Vector3 newPosition = new Vector3(oldPosition.x,oldPosition.y+yDiff,oldPosition.z);
-        canModel.transform.position = newPosition;
+        canModel.transform.localPosition = newPosition;
         acceleration = Input.acceleration;
     }
 

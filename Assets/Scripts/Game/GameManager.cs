@@ -15,9 +15,10 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     const string punishmentInstruction = @"Please write down the punishment then click the submit button. The loser of the game will randomly pick one of the punishments.";
 
-    
+    const string cokeShakingInstruction = @"Welcome to the game Cola Shaker! After the count down, please shake your phone as crazy as possible! The player who let the cola spray out first will be the winner!";
 
-    enum State {Scaning, writingPunishment, beforeTurntable, turntableStart, turntableFinish, pouring, drinking, codingGame}
+    enum State {Scaning, writingPunishment, beforeTurntable, turntableStart, turntableFinish,
+     pouring, drinking, beforeCokeShaking,cokeShaking ,beforeCodingGame}
 
 
     private State myState;
@@ -38,10 +39,22 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public AnimationClip disappearClip;
 
+    public GameObject countDownPanel;
+
+    private CountDownController countdownController;
+
+    public ARController myArController;
+
+    private GameObject ARCamera;
+
     private int chosenPlayerIndex = 0;
+
+    public GameObject cokeCan;
     // Start is called before the first frame update
     void Start()
     {
+        ARCamera = myArController.ARCamera;
+        countdownController = countDownPanel.GetComponent<CountDownController>();
         myState = State.Scaning;
         showPanelwithAnim(instructionPanel,popupClip);
         instructionText.text = scanInstruction;
@@ -129,10 +142,34 @@ public class GameManager : MonoBehaviourPunCallbacks
                     showPanelwithAnim(myTurntable,popupClip);
                 }
                 break;
+            case State.beforeCokeShaking:
+                everyoneReady = everyoneCheck("ready");
+                if (everyoneReady){
+                    myState = State.cokeShaking;
+                    countDownPanel.SetActive(true);
+                    waitingPanel.SetActive(false);
+                    countdownController.countDown();
+
+                }
+                break;
             default:
                 break;
         }
     }
+
+    public void gameStart(){
+        countDownPanel.SetActive(false);
+        switch(myState){
+            case State.cokeShaking:
+                cokeCan.SetActive(true);
+                cokeCan.transform.parent = ARCamera.transform; 
+                cokeCan.transform.localPosition = new Vector3(0,-0.2f,1);
+                cokeCan.transform.localRotation = Quaternion.identity;
+                break;
+        }
+    }
+
+    
 
     public void finishScanning(){
         myState = State.writingPunishment;
@@ -219,6 +256,8 @@ public class GameManager : MonoBehaviourPunCallbacks
                 break;
             // cola shaking game
             case 1:
+                myState = State.beforeCokeShaking;
+                instructionText.text = cokeShakingInstruction;
                 break;
             // pouring drinks into cup
             case 2:
@@ -247,6 +286,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         switch (myState){
             case State.pouring:
             case State.drinking:
+            case State.beforeCokeShaking:
                 setProperty("ready",true);
                 //showPanelwithAnim(waitingPanel,popupClip);
                 break;
