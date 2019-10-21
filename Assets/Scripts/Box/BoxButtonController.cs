@@ -10,7 +10,7 @@ public class BoxButtonController : MonoBehaviour
     private InputField PlayerInput;
     public Animation PanelAnim;
 
-    public GameManager myManger;
+    public GameManager myManager;
 
     private void Awake()
     {
@@ -22,7 +22,9 @@ public class BoxButtonController : MonoBehaviour
         PlayerInput = GameObject.Find("InputField").GetComponent<InputField>();
         if (PlayerInput.text != ""){
             PanelAnim.Play();
-            myManger.submitPunishment(PlayerInput.text);
+            myManager.submitPunishment(PlayerInput.text);
+
+            myManager.StartCoroutine(myManager.switchPanel(PaperPanel,myManager.myTurntable,myManager.rotateClip,myManager.popupClip));
         }
     }
 

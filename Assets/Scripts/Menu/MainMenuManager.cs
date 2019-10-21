@@ -82,7 +82,7 @@ public class MainMenuManager : MonoBehaviourPunCallbacks
     {
         // Play the fade out animation for the old panel
         Animation fadeoutAnimation = oldPanel.GetComponent<Animation>();
-        float duration = fadeoutClip.length;
+        float duration = leaveClip.length;
         fadeoutAnimation.clip = leaveClip;
         fadeoutAnimation.Play();
         // after the seconds of the clip length

@@ -18,6 +18,11 @@ public class GameManager : MonoBehaviourPunCallbacks
     public turntableController myTurntableController;
 
     public GameObject turntableButton;
+
+    public AnimationClip popupClip;
+    public AnimationClip rotateClip;
+
+    public GameObject waitingPanel;
     // Start is called before the first frame update
     void Start()
     {
@@ -34,9 +39,14 @@ public class GameManager : MonoBehaviourPunCallbacks
             case State.writingPunishment:
                 bool everyoneReady = true;
                 foreach (Player p in PhotonNetwork.PlayerList) {
+                    
                     if(!(bool)p.CustomProperties["hasSubmittedPunishment"]){
                         everyoneReady = false;
-                        break;
+                    }
+                    else{
+                        if (p.IsLocal){
+                            waitingPanel.SetActive(true);
+                        }
                     }
                 }
                 if (everyoneReady){
@@ -81,9 +91,10 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public void switchToBeforeTurntable(){
         myState = State.beforeTurntable;
+        waitingPanel.SetActive(false);
         Debug.Log("haahahahahaha");
         // TODO: Enable the turnable
-        myTurntable.SetActive(true);
+        // myTurntable.SetActive(true);
         ExitGames.Client.Photon.Hashtable costomProperties = new ExitGames.Client.Photon.Hashtable () {	//初始化玩家自定义属性
 					{ "hasDrawedTurntable",false },	// whether the player has drawed the turntable
 					{ "turntableChoice",-1 },	// the choice
@@ -92,6 +103,9 @@ public class GameManager : MonoBehaviourPunCallbacks
         if (PhotonNetwork.IsMasterClient){
             // TODO: Enable the rotate button
             turntableButton.SetActive(true);
+        }
+        else{
+            turntableButton.SetActive(false);
         }
     }
 
@@ -104,5 +118,24 @@ public class GameManager : MonoBehaviourPunCallbacks
 				};
         PhotonNetwork.SetPlayerCustomProperties (costomProperties);
         myState = State.turntableStart;
+    }
+
+    public IEnumerator switchPanel(GameObject oldPanel, GameObject newPanel, AnimationClip leaveClip, AnimationClip inClip)
+    {
+        // Play the fade out animation for the old panel
+        Animation fadeoutAnimation = oldPanel.GetComponent<Animation>();
+        float duration = leaveClip.length;
+        fadeoutAnimation.clip = leaveClip;
+        fadeoutAnimation.Play();
+        // after the seconds of the clip length
+        yield return new WaitForSeconds(duration);
+
+        // Play the move in animation for the new panel
+        newPanel.SetActive(true);
+        Animation moveinAnimation = newPanel.GetComponent<Animation>();
+        moveinAnimation.clip = inClip;
+        moveinAnimation.Play();
+        oldPanel.SetActive(false);
+        oldPanel.GetComponent<Transform>().localPosition = new Vector3(0,0,0);
     }
 }
