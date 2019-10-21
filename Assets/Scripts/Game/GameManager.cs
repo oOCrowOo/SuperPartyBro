@@ -38,27 +38,33 @@ public class GameManager : MonoBehaviourPunCallbacks
                 break;
             case State.writingPunishment:
                 bool everyoneReady = true;
+
+                // check every one has submitted the punishment
                 foreach (Player p in PhotonNetwork.PlayerList) {
-                    
                     if(!(bool)p.CustomProperties["hasSubmittedPunishment"]){
                         everyoneReady = false;
                     }
                     else{
+                        // if the local player has submitted the punishment but others don't, show the waiting panel
                         if (p.IsLocal){
                             waitingPanel.SetActive(true);
                         }
                     }
                 }
+
+                // if everyone has submitted the punishment, move to the next stage
                 if (everyoneReady){
                     switchToBeforeTurntable();
                 }
                 break;
             case State.beforeTurntable:
 
+                // master will click the button, no need to wait
                 if (PhotonNetwork.LocalPlayer.IsMasterClient){
                     return;
                 }
 
+                // check if the master draw the turntable
                 foreach (Player p in PhotonNetwork.PlayerList) {
                     if(p.IsMasterClient){
                         if((bool)p.CustomProperties["hasDrawedTurntable"]){
@@ -92,16 +98,12 @@ public class GameManager : MonoBehaviourPunCallbacks
     public void switchToBeforeTurntable(){
         myState = State.beforeTurntable;
         waitingPanel.SetActive(false);
-        Debug.Log("haahahahahaha");
-        // TODO: Enable the turnable
-        // myTurntable.SetActive(true);
         ExitGames.Client.Photon.Hashtable costomProperties = new ExitGames.Client.Photon.Hashtable () {	//初始化玩家自定义属性
 					{ "hasDrawedTurntable",false },	// whether the player has drawed the turntable
 					{ "turntableChoice",-1 },	// the choice
 				};
         PhotonNetwork.SetPlayerCustomProperties (costomProperties);
         if (PhotonNetwork.IsMasterClient){
-            // TODO: Enable the rotate button
             turntableButton.SetActive(true);
         }
         else{
@@ -113,8 +115,8 @@ public class GameManager : MonoBehaviourPunCallbacks
         int choice = myTurntableController.selectNum();
         myTurntableController.drawTurntable(choice);
         ExitGames.Client.Photon.Hashtable costomProperties = new ExitGames.Client.Photon.Hashtable () {	//初始化玩家自定义属性
-					{ "hasDrawedTurntable",true },	// whether the player has submitted his punishment
-					{ "turntableChoice",choice },	// the content of punishment
+					{ "hasDrawedTurntable",true },
+					{ "turntableChoice",choice },	
 				};
         PhotonNetwork.SetPlayerCustomProperties (costomProperties);
         myState = State.turntableStart;
