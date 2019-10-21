@@ -19,6 +19,8 @@ public class turntableController : MonoBehaviour
     public int currentSelectedNum = 0;
     private float rotateSpeed;
     private float totalRotation;
+
+    public GameManager myManager;
     // Start is called before the first frame update
     void Start()
     {
@@ -58,6 +60,8 @@ public class turntableController : MonoBehaviour
                 if (totalRotation <= 0){
                     duringDrawing = false;
                     reachingEnd = false;
+                    // ask the manager to move to the next state
+                    myManager.finishTurntable(currentSelectedNum);
                 }
             }
             
@@ -66,16 +70,14 @@ public class turntableController : MonoBehaviour
 
 
     public int selectNum(){
+        // TODO: Remove testing hard code
+        return 3;
         int optionNum = options.Length;
         int selectedNum = Random.Range(0,optionNum);
         return selectedNum;
     }
 
     public void drawTurntable(int select){
-        // int optionNum = options.Length;
-        // // randomly select one option
-        // // TODO: don't select the same option every time
-        // int selectedNum = Random.Range(0,optionNum);
         duringDrawing = true;
         currentSelectedNum = select;
         totalRotation = 360*ROTATENUM + currentSelectedNum*90;

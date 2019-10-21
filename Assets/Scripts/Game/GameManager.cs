@@ -15,7 +15,9 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     const string punishmentInstruction = @"Please write down the punishment then click the submit button. The loser of the game will randomly pick one of the punishments.";
 
-    enum State {Scaning, writingPunishment, beforeTurntable, turntableStart, codingGame}
+    
+
+    enum State {Scaning, writingPunishment, beforeTurntable, turntableStart, turntableFinish, pouring, drinking, codingGame}
 
 
     private State myState;
@@ -35,12 +37,34 @@ public class GameManager : MonoBehaviourPunCallbacks
     public Text instructionText;
 
     public AnimationClip disappearClip;
+
+    private int chosenPlayerIndex = 0;
     // Start is called before the first frame update
     void Start()
     {
         myState = State.Scaning;
         showPanelwithAnim(instructionPanel,popupClip);
         instructionText.text = scanInstruction;
+        setProperty("ready",false);
+    }
+
+    private bool everyoneCheck(string key){
+        bool returnEntry = true;
+
+        // check every one has submitted the punishment
+        foreach (Player p in PhotonNetwork.PlayerList) {
+            if(!(bool)p.CustomProperties[key]){
+                returnEntry = false;
+                Debug.Log(p);
+            }
+            else{
+                // if the local player has submitted the punishment but others don't, show the waiting panel
+                if (p.IsLocal){
+                    waitingPanel.SetActive(true);
+                }
+            }
+        }
+        return returnEntry;
     }
 
     // Update is called once per frame
@@ -51,20 +75,20 @@ public class GameManager : MonoBehaviourPunCallbacks
             case State.Scaning:
                 break;
             case State.writingPunishment:
-                bool everyoneReady = true;
+                bool everyoneReady = everyoneCheck("hasSubmittedPunishment");
 
-                // check every one has submitted the punishment
-                foreach (Player p in PhotonNetwork.PlayerList) {
-                    if(!(bool)p.CustomProperties["hasSubmittedPunishment"]){
-                        everyoneReady = false;
-                    }
-                    else{
-                        // if the local player has submitted the punishment but others don't, show the waiting panel
-                        if (p.IsLocal){
-                            waitingPanel.SetActive(true);
-                        }
-                    }
-                }
+                // // check every one has submitted the punishment
+                // foreach (Player p in PhotonNetwork.PlayerList) {
+                //     if(!(bool)p.CustomProperties["hasSubmittedPunishment"]){
+                //         everyoneReady = false;
+                //     }
+                //     else{
+                //         // if the local player has submitted the punishment but others don't, show the waiting panel
+                //         if (p.IsLocal){
+                //             waitingPanel.SetActive(true);
+                //         }
+                //     }
+                // }
 
                 // if everyone has submitted the punishment, move to the next stage
                 if (everyoneReady){
@@ -84,12 +108,26 @@ public class GameManager : MonoBehaviourPunCallbacks
                         if((bool)p.CustomProperties["hasDrawedTurntable"]){
                             myTurntableController.drawTurntable((int)p.CustomProperties["turntableChoice"]);
                             myState = State.turntableStart;
+                            chosenPlayerIndex = (int)p.CustomProperties["playerChoice"];
                         }
                     }
                 }
                 break;
 
             case State.turntableStart:
+                break;
+            case State.turntableFinish:
+                break;
+            case State.pouring:
+            case State.drinking:
+                everyoneReady = everyoneCheck("ready");
+                // Event finished, back to turntable
+                // Debug.Log("=======================");
+                // Debug.Log(everyoneReady);
+                if (everyoneReady){
+                    switchToBeforeTurntable();
+                    showPanelwithAnim(myTurntable,popupClip);
+                }
                 break;
             default:
                 break;
@@ -98,6 +136,8 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public void finishScanning(){
         myState = State.writingPunishment;
+        showPanelwithAnim(instructionPanel,popupClip);
+        instructionText.text = punishmentInstruction;
     }
 
     public void submitPunishment(string punishment){
@@ -110,7 +150,8 @@ public class GameManager : MonoBehaviourPunCallbacks
     }
 
     public void switchToBeforeTurntable(){
-        myState = State.beforeTurntable;
+        //setProperty("ready",false);
+        
         waitingPanel.SetActive(false);
         ExitGames.Client.Photon.Hashtable costomProperties = new ExitGames.Client.Photon.Hashtable () {	//初始化玩家自定义属性
 					{ "hasDrawedTurntable",false },	// whether the player has drawed the turntable
@@ -123,17 +164,21 @@ public class GameManager : MonoBehaviourPunCallbacks
         else{
             turntableButton.SetActive(false);
         }
+        myState = State.beforeTurntable;
     }
 
     public void drawTurntable(){
         int choice = myTurntableController.selectNum();
+        int playerChoice = Random.Range(0,PhotonNetwork.PlayerList.Length - 1);
         myTurntableController.drawTurntable(choice);
         ExitGames.Client.Photon.Hashtable costomProperties = new ExitGames.Client.Photon.Hashtable () {	//初始化玩家自定义属性
 					{ "hasDrawedTurntable",true },
 					{ "turntableChoice",choice },	
+                    { "playerChoice",playerChoice },
 				};
         PhotonNetwork.SetPlayerCustomProperties (costomProperties);
         myState = State.turntableStart;
+        turntableButton.SetActive(false);
     }
 
     public IEnumerator switchPanel(GameObject oldPanel, GameObject newPanel, AnimationClip leaveClip, AnimationClip inClip)
@@ -163,8 +208,48 @@ public class GameManager : MonoBehaviourPunCallbacks
         moveinAnimation.Play();
     }
 
+    public void finishTurntable(int selectNum){
+        myState = State.turntableFinish;
+        setProperty("ready",false);
+        setProperty("hasDrawedTurntable",false);
+        StartCoroutine(switchPanel(myTurntable,instructionPanel,disappearClip,popupClip));
+        switch(selectNum){
+            // crazy programmer game
+            case 0:
+                break;
+            // cola shaking game
+            case 1:
+                break;
+            // pouring drinks into cup
+            case 2:
+                myState = State.pouring;
+                //showPanelwithAnim(instructionPanel,popupClip);
+                instructionText.text = "Event determined! Player " + PhotonNetwork.PlayerList[chosenPlayerIndex].NickName + ", please choose one of whatever drinks on the table and pour it into the cup!";
+                break;
+            // drink everything inside the cup
+            case 3:
+                myState = State.drinking;
+                instructionText.text = "Event determined! Player " + PhotonNetwork.PlayerList[chosenPlayerIndex].NickName + ", please drink up this the cup of whatever! :(";
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void setProperty(string key, object value){
+         ExitGames.Client.Photon.Hashtable costomProperties = new ExitGames.Client.Photon.Hashtable () {	//初始化玩家自定义属性
+					{ key,value }
+				};
+        PhotonNetwork.SetPlayerCustomProperties (costomProperties);
+    }
+
     public void onClickGotit(){
         switch (myState){
+            case State.pouring:
+            case State.drinking:
+                setProperty("ready",true);
+                //showPanelwithAnim(waitingPanel,popupClip);
+                break;
             default:
                 break;
         }
