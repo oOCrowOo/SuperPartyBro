@@ -24,6 +24,8 @@ public class ARController : MonoBehaviour
 
     private bool EnableBox;
 
+    public GameManager myManager;
+
 
     // Start is called before the first frame update
     void Start()
@@ -90,7 +92,9 @@ public class ARController : MonoBehaviour
                 Box.transform.parent = anchor.transform;
                 EnableBox = true;
 
+                // Clicked screen, box shows up, state switch
                 PaperPanel.SetActive(true);
+                myManager.finishScanning();
             }
         }
         

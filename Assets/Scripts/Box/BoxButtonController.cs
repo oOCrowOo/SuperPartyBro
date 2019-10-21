@@ -10,6 +10,8 @@ public class BoxButtonController : MonoBehaviour
     private InputField PlayerInput;
     public Animation PanelAnim;
 
+    public GameManager myManger;
+
     private void Awake()
     {
         SubmitButton = GameObject.Find("Submit").GetComponent<Button>();
@@ -18,9 +20,10 @@ public class BoxButtonController : MonoBehaviour
     public void disablePanel()
     {
         PlayerInput = GameObject.Find("InputField").GetComponent<InputField>();
-        Debug.Log(PlayerInput.text);
-        PanelAnim.Play();
-       //PaperPanel.SetActive(false);
+        if (PlayerInput.text != ""){
+            PanelAnim.Play();
+            myManger.submitPunishment(PlayerInput.text);
+        }
     }
 
 }

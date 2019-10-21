@@ -57,6 +57,8 @@ public class RoomPanelController : MonoBehaviourPun {
 				costomProperties = new ExitGames.Client.Photon.Hashtable () {	//初始化玩家自定义属性
 					{ "TeamNum",i },		//玩家队伍序号
 					{ "isReady",false },	//玩家准备状态
+					{ "hasSubmittedPunishment",false },	// whether the player has submitted his punishment
+					{ "punishment","" },	// the content of punishment
 					// { "Score",0 }			//玩家得分
 				};
 				PhotonNetwork.SetPlayerCustomProperties (costomProperties);	//将玩家自定义属性赋予玩家

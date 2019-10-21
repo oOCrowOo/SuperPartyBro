@@ -64,13 +64,20 @@ public class turntableController : MonoBehaviour
         }
     }
 
-    public void drawTurntable(){
+
+    public int selectNum(){
         int optionNum = options.Length;
-        // randomly select one option
-        // TODO: don't select the same option every time
         int selectedNum = Random.Range(0,optionNum);
+        return selectedNum;
+    }
+
+    public void drawTurntable(int select){
+        // int optionNum = options.Length;
+        // // randomly select one option
+        // // TODO: don't select the same option every time
+        // int selectedNum = Random.Range(0,optionNum);
         duringDrawing = true;
-        currentSelectedNum = selectedNum;
+        currentSelectedNum = select;
         totalRotation = 360*ROTATENUM + currentSelectedNum*90;
         rotateSpeed = START_SPEED;
     }
