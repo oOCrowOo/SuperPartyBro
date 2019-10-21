@@ -1,12 +1,19 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using Photon;
 using Photon.Pun;
 using Photon.Realtime;
 
 public class GameManager : MonoBehaviourPunCallbacks
 {
+
+    const string scanInstruction = @"
+    Welcome to the super party bro world. This is the ar world linked with your friends. You will play games with your friends and the loser will take the punishments! Please use your phone's camera to scan a smooth plane until the grids shows up. Then click on the grids to continue.
+    ";
+
+    const string punishmentInstruction = @"Please write down the punishment then click the submit button. The loser of the game will randomly pick one of the punishments.";
 
     enum State {Scaning, writingPunishment, beforeTurntable, turntableStart, codingGame}
 
@@ -23,10 +30,17 @@ public class GameManager : MonoBehaviourPunCallbacks
     public AnimationClip rotateClip;
 
     public GameObject waitingPanel;
+
+    public GameObject instructionPanel;
+    public Text instructionText;
+
+    public AnimationClip disappearClip;
     // Start is called before the first frame update
     void Start()
     {
         myState = State.Scaning;
+        showPanelwithAnim(instructionPanel,popupClip);
+        instructionText.text = scanInstruction;
     }
 
     // Update is called once per frame
@@ -139,5 +153,22 @@ public class GameManager : MonoBehaviourPunCallbacks
         moveinAnimation.Play();
         oldPanel.SetActive(false);
         oldPanel.GetComponent<Transform>().localPosition = new Vector3(0,0,0);
+    }
+
+    public void showPanelwithAnim(GameObject panel, AnimationClip clip){
+         // Play the move in animation for the new panel
+        panel.SetActive(true);
+        Animation moveinAnimation = panel.GetComponent<Animation>();
+        moveinAnimation.clip = clip;
+        moveinAnimation.Play();
+    }
+
+    public void onClickGotit(){
+        switch (myState){
+            default:
+                break;
+        }
+
+        showPanelwithAnim(instructionPanel,disappearClip);
     }
 }

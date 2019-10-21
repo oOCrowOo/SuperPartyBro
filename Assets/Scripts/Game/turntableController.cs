@@ -7,7 +7,7 @@ public class turntableController : MonoBehaviour
     const float START_SPEED = 1000;
 
     const float ENDING_SPEED = 100f;
-    const float SLOWDOWN_RATE = 1f;
+    const float SLOWDOWN_RATE = 2f;
     const int ROTATENUM = 100;
 
     public Text[] options;
