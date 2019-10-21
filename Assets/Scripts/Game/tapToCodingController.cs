@@ -5,6 +5,9 @@ using UnityEngine.UI;
 public class tapToCodingController : MonoBehaviour
 {
 
+
+    public GameManager myManager;
+
     const string PYTHONCODE = @"
 def partition(arr,low,high): 
     i = ( low-1 )
@@ -27,6 +30,8 @@ def quickSort(arr,low,high):
     private int count = 0;
     private int codeLength = 0;
 
+    private bool gameover = false;
+
     public Text output;
     // Start is called before the first frame update
     void Start()
@@ -34,11 +39,25 @@ def quickSort(arr,low,high):
         codeLength = PYTHONCODE.Length;
     }
 
+    void OnEnable(){
+        gameover = false;
+        count = 0;
+    }
+
     // Update is called once per frame
     void Update()
     {
+
+        if(gameover){
+            return;
+        }
+
         if (count < codeLength){
             output.text = PYTHONCODE.Substring(0,count);
+        }
+        else{
+            gameover = true;
+            myManager.gameOver();
         }
     }
 

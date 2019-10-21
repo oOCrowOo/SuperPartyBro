@@ -15,8 +15,9 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     const string punishmentInstruction = @"Please write down the punishment then click the submit button. The loser of the game will randomly pick one of the punishments.";
 
-    const string cokeShakingInstruction = @"Welcome to the game Cola Shaker! After the count down, please shake your phone as crazy as possible! The player who let the cola spray out first will be the winner!";
+    const string cokeShakingInstruction = @"Welcome to the game Cola Shaker! After the count down, please shake the coke as crazy as possible! The player who let the cola spray out first will be the winner!";
 
+    const string codingGameInstruction = @"Welcome to the game Crazy Programmer! After the count down, please tap the button as soon as possible! The player who finished coding task (by tapping) first will be the winner!";
     enum State {Scaning, writingPunishment, beforeTurntable, turntableStart, turntableFinish,
      pouring, drinking, beforeCokeShaking,cokeShaking ,beforeCodingGame,codingGame,punishment}
 
@@ -52,6 +53,10 @@ public class GameManager : MonoBehaviourPunCallbacks
     public GameObject victoryPanel;
 
     public GameObject cokeCan;
+
+    public GameObject crazyProgrammerPanel;
+
+    public tapToCodingController programmerController;
     // Start is called before the first frame update
     void Start()
     {
@@ -156,6 +161,18 @@ public class GameManager : MonoBehaviourPunCallbacks
                     setProperty("finished",false);
                 }
                 break;
+            case State.beforeCodingGame:
+
+                everyoneReady = everyoneCheck("ready");
+                if (everyoneReady){
+                    myState = State.codingGame;
+                    countDownPanel.SetActive(true);
+                    waitingPanel.SetActive(false);
+                    countdownController.countDown();
+                    setProperty("finished",false);
+                }
+                break;
+
             case State.cokeShaking:
                 everyoneReady = everyoneCheck("finished");
                 if (everyoneReady){
@@ -165,6 +182,21 @@ public class GameManager : MonoBehaviourPunCallbacks
                     ", you need to take the punishment from Player " + punisher.NickName + ": " + punisher.CustomProperties["punishment"];
                     victoryPanel.SetActive(false);
                     cokeCan.SetActive(false);
+                    waitingPanel.SetActive(false);
+                    myState = State.punishment;
+                    showPanelwithAnim(instructionPanel,popupClip);
+                }
+                break;
+
+            case State.codingGame:
+                everyoneReady = everyoneCheck("finished");
+                if (everyoneReady){
+                    Player punisher = PhotonNetwork.PlayerList[getPunisherId()];
+                    instructionText.text = "Congrats to Player " + getWinner() + 
+                    "! You win this mini game! And sorry for the player " + getLoser() + 
+                    ", you need to take the punishment from Player " + punisher.NickName + ": " + punisher.CustomProperties["punishment"];
+                    victoryPanel.SetActive(false);
+                    crazyProgrammerPanel.SetActive(false);
                     waitingPanel.SetActive(false);
                     myState = State.punishment;
                     showPanelwithAnim(instructionPanel,popupClip);
@@ -218,6 +250,9 @@ public class GameManager : MonoBehaviourPunCallbacks
                 cokeCan.transform.localPosition = new Vector3(0,-0.2f,1);
                 cokeCan.transform.localRotation = Quaternion.identity;
                 break;
+            case State.codingGame:
+                crazyProgrammerPanel.SetActive(true);
+                break;
         }
     }
 
@@ -225,6 +260,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         setProperty("ready",false);
         switch(myState){
             case State.cokeShaking:
+            case State.codingGame:
                 int rank = 0;
                 foreach (Player p in PhotonNetwork.PlayerList) {
                     if (!p.IsLocal){
@@ -333,6 +369,8 @@ public class GameManager : MonoBehaviourPunCallbacks
         switch(selectNum){
             // crazy programmer game
             case 0:
+                myState = State.beforeCodingGame;
+                instructionText.text = codingGameInstruction;
                 break;
             // cola shaking game
             case 1:
@@ -348,7 +386,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             // drink everything inside the cup
             case 3:
                 myState = State.drinking;
-                instructionText.text = "Event determined! Player " + PhotonNetwork.PlayerList[chosenPlayerIndex].NickName + ", please drink up this the cup of whatever! :(";
+                instructionText.text = "Event determined! Player " + PhotonNetwork.PlayerList[chosenPlayerIndex].NickName + ", please drink up this cup of whatever! :(";
                 break;
             default:
                 break;
@@ -367,6 +405,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             case State.pouring:
             case State.drinking:
             case State.beforeCokeShaking:
+            case State.beforeCodingGame:
             case State.punishment:
                 setProperty("ready",true);
                 //showPanelwithAnim(waitingPanel,popupClip);

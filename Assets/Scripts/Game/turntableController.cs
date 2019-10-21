@@ -71,7 +71,7 @@ public class turntableController : MonoBehaviour
 
     public int selectNum(){
         // TODO: Remove testing hard code
-        return 1;
+
         int optionNum = options.Length;
         int selectedNum = Random.Range(0,optionNum);
         return selectedNum;
