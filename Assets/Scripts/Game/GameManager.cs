@@ -177,10 +177,10 @@ public class GameManager : MonoBehaviourPunCallbacks
                 everyoneReady = everyoneCheck("finished");
                 if (everyoneReady){
                     Player punisher = PhotonNetwork.PlayerList[getPunisherId()];
-                    instructionText.text = "Congrats to Player " + getWinner() + 
-                    "! You win this mini game! And sorry for the player " + getLoser() + 
-                    ", you need to take the punishment from Player " + punisher.NickName + ": " + punisher.CustomProperties["punishment"];
-                    victoryPanel.SetActive(false);
+                    instructionText.text = "Congrats to <color=red>Player " + getWinner() + 
+                    "</color>! You win this mini game! And sorry for the <color=red>player " + getLoser() + 
+                    "</color>, you need to take the punishment from Player " + punisher.NickName + ": <color=red>" + punisher.CustomProperties["punishment"] + "</color>.";
+                    //victoryPanel.SetActive(false);
                     cokeCan.SetActive(false);
                     waitingPanel.SetActive(false);
                     myState = State.punishment;
@@ -192,10 +192,10 @@ public class GameManager : MonoBehaviourPunCallbacks
                 everyoneReady = everyoneCheck("finished");
                 if (everyoneReady){
                     Player punisher = PhotonNetwork.PlayerList[getPunisherId()];
-                    instructionText.text = "Congrats to Player " + getWinner() + 
-                    "! You win this mini game! And sorry for the player " + getLoser() + 
-                    ", you need to take the punishment from Player " + punisher.NickName + ": " + punisher.CustomProperties["punishment"];
-                    victoryPanel.SetActive(false);
+                    instructionText.text = "Congrats to <color=red>Player " + getWinner() + 
+                    "</color>! You win this mini game! And sorry for the <color=red>player " + getLoser() + 
+                    "</color>, you need to take the punishment from Player " + punisher.NickName + ": <color=red>" + punisher.CustomProperties["punishment"] + "</color>.";
+                    //victoryPanel.SetActive(false);
                     crazyProgrammerPanel.SetActive(false);
                     waitingPanel.SetActive(false);
                     myState = State.punishment;
@@ -381,12 +381,12 @@ public class GameManager : MonoBehaviourPunCallbacks
             case 2:
                 myState = State.pouring;
                 //showPanelwithAnim(instructionPanel,popupClip);
-                instructionText.text = "Event determined! Player " + PhotonNetwork.PlayerList[chosenPlayerIndex].NickName + ", please choose one of whatever drinks on the table and pour it into the cup!";
+                instructionText.text = "Event determined! <color=red>Player " + PhotonNetwork.PlayerList[chosenPlayerIndex].NickName + "</color>, please choose one of whatever drinks on the table and pour it into the cup!";
                 break;
             // drink everything inside the cup
             case 3:
                 myState = State.drinking;
-                instructionText.text = "Event determined! Player " + PhotonNetwork.PlayerList[chosenPlayerIndex].NickName + ", please drink up this cup of whatever! :(";
+                instructionText.text = "Event determined! <color=red>Player " + PhotonNetwork.PlayerList[chosenPlayerIndex].NickName + "</color>, please drink up this cup of whatever! :(";
                 break;
             default:
                 break;
@@ -406,9 +406,11 @@ public class GameManager : MonoBehaviourPunCallbacks
             case State.drinking:
             case State.beforeCokeShaking:
             case State.beforeCodingGame:
-            case State.punishment:
                 setProperty("ready",true);
-                //showPanelwithAnim(waitingPanel,popupClip);
+                break;
+            case State.punishment:
+                victoryPanel.SetActive(false);
+                setProperty("ready",true);
                 break;
             default:
                 break;

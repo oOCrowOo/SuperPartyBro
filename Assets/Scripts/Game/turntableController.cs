@@ -10,6 +10,10 @@ public class turntableController : MonoBehaviour
     const float SLOWDOWN_RATE = 2f;
     const int ROTATENUM = 100;
 
+    private List<int> presetList = new List<int>() {2,2,3,0,1};
+
+    private int hardcodeSelect = -1;
+
     public Text[] options;
     public bool duringDrawing = false;
     public bool reachingEnd = false;
@@ -70,7 +74,10 @@ public class turntableController : MonoBehaviour
 
 
     public int selectNum(){
-        // TODO: Remove testing hard code
+        if (hardcodeSelect < presetList.Count){
+            hardcodeSelect ++;
+            return presetList[hardcodeSelect];
+        }
 
         int optionNum = options.Length;
         int selectedNum = Random.Range(0,optionNum);
